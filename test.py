@@ -5,7 +5,7 @@ import requests
 # from http.cookiejar import LWPCookieJar
 
 WATER_ZONE_URL = 'http://bt.neu6.edu.cn/forum-4-1.html'
-COOKIE_FILE = 'cookies-my.json'
+COOKIE_FILE = 'cookies-my.json' # change this to cookies.json
 
 
 def load_cookies():
