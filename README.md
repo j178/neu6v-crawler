@@ -1,9 +1,10 @@
 ## Crawler for [六维空间](http://bt.neu6.edu.cn)
 
 ### 功能
-1. 获取[资源索引页](http://bt.neu6.edu.cn/plugin.php?id=neubt_resourceindex)新增资源, 自动下载种子并添加到 [uTorrent](http://www.utorrent.com/) 中下载
-2. 获取[水区](http://bt.neu6.edu.cn/forum-4-1.html)新增主题, 调用图灵机器人 API 自动回复(浮云+1)
-3. 自动回复提到'我'的消息
+-[x] 获取[资源索引页](http://bt.neu6.edu.cn/plugin.php?id=neubt_resourceindex)新增资源, 自动下载种子并添加到 [uTorrent](http://www.utorrent
+.com/) 中下载
+-[ ] 获取[水区](http://bt.neu6.edu.cn/forum-4-1.html)新增主题, 调用图灵机器人 API 自动回复(浮云+1) 
+-[ ] 自动回复提到'我'的消息
 
 ### 要求
 1. 网络支持 IPv6, 拥有六维空间账号, 以及足够的浮云
