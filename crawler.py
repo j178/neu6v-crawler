@@ -46,5 +46,5 @@ def main():
 
 
 def test_parse():
-    with open('index.html', encoding='utf8') as f:
+    with open('data/index.html', encoding='utf8') as f:
         check_new_topic(f.read())

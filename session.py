@@ -6,7 +6,7 @@ import requests
 
 __all__ = ['session']
 
-COOKIE_FILE = 'cookies-my.json'  # change this to cookies.json
+COOKIE_FILE = 'data/cookies-my.json'  # change this to cookies.json
 
 
 def load_cookies():

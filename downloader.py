@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 
 from crawler import BeautifulSoup
 from session import session as s
+from utorrent import uTorrent
 
 
 def atoi(s):
@@ -14,13 +15,15 @@ def atoi(s):
 
 
 INDEX_PAGE = 'http://bt.neu6.edu.cn/plugin.php?id=neubt_resourceindex'
+DOWNLOADED_FILE = 'data/downloaded.json'
+CONFIG_FILE = 'data/config-my.json'  # change this to data/config.json
 
 downloaded = set()
 
 
 def load():
     global downloaded
-    with open('downloaded.json') as f:
+    with open(DOWNLOADED_FILE) as f:
         try:
             l = json.load(f)
         except json.JSONDecodeError:
@@ -29,7 +32,7 @@ def load():
 
 
 def save():
-    with open('downloaded.json', 'w') as f:
+    with open(DOWNLOADED_FILE, 'w') as f:
         json.dump(list(downloaded), f)
 
 
@@ -51,15 +54,17 @@ def get_new():
             yield url
 
 
-def download(url):
+def get_filename_from_response(r):
+    return re.findall(r'filename="(.+)"', r.headers['Content-Disposition'])[0]
+
+
+def download(url, path=''):
     # 进入资源页面
     r = s.get(url)
     soup = BeautifulSoup(r.text)
     a = soup.find('dl', class_='tattl').a
     # 获取种子下载链接
     href = a['href']
-    name = a.text
-    print(name, href)
     if not href:
         return
 
@@ -70,9 +75,9 @@ def download(url):
 
     # 直接下载
     if 'Content-Disposition' in r.headers and r.headers['Content-Type'] == 'application/x-bittorrent':
-        print('直接下载')
-        filename = re.findall(r'filename="(.+)"', r.headers['Content-Disposition'])[0]
+        filename = get_filename_from_response(r)
         content = r.content
+    # 进入等待下载页面
     else:
         soup = BeautifulSoup(r.text)
         torrent_url = soup.find('p', class_='alert_btnleft').a['href']
@@ -80,26 +85,36 @@ def download(url):
         r.raise_for_status()
 
         print(r.headers)
-        filename = re.findall(r'filename="(.+)"', r.headers['Content-Disposition'])[0]
+        filename = get_filename_from_response(r)
         content = r.content
 
-    with open(filename, 'wb') as f:
-        f.write(content)
-
     downloaded.add(url)
+
+    return filename, content
 
 
 def main():
     load()
     for url in get_new():
         print('new', url)
-        download(url)
+        filename, content = download(url)
+        utorrent.add_file(bytes=content)
     save()
 
 
+def load_config():
+    with open(CONFIG_FILE) as f:
+        return json.load(f)
+
+
 def test():
-    download('http://bt.neu6.edu.cn/thread-1563666-1-1.html')
+    filename, content = download('http://bt.neu6.edu.cn/thread-1563637-1-1.html')
+    print(filename)
+    r = utorrent.add_file(bytes=content)
+    print(r)
 
 
 if __name__ == '__main__':
+    utorrent = uTorrent(**load_config())
+    # main()
     test()
