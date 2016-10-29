@@ -60,7 +60,7 @@ def convert_size(s):
         size = r.group(1)
         unit = r.group(2)
     else:
-        raise ValueError('Invalid size: ' + repr(s))
+        raise ValueError('Invalid size: {!r}'.format(s))
 
     if unit == 'M':
         return int(size)
@@ -69,7 +69,7 @@ def convert_size(s):
     if unit == 'T':
         return 1024 * 1024 * int(size)
 
-    raise ValueError('Invalid size: ' + repr(s))
+    raise ValueError('Invalid size: {!r}'.format(s))
 
 
 def get_new(filter=None):
@@ -85,7 +85,8 @@ def get_new(filter=None):
 
         try:
             size = convert_size(thread.find_all('td')[2].text)
-        except ValueError:
+        except ValueError as e:
+            log.error(str(e))
             continue
 
         a = thread.find_all('td')[3].a
