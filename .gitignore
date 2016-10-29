@@ -3,4 +3,5 @@
 data/cookies-my.json
 data/config-my.json
 data/index.html
+*.log
 __pycache__/
