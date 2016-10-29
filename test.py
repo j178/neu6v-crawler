@@ -1,4 +1,4 @@
-from downloader import download, utorrent
+from downloader import *
 
 
 def test_downloader():
@@ -8,6 +8,13 @@ def test_downloader():
     print(r)
 
 
+def test_convert_size():
+    print(convert_size('1GB'))
+    print(convert_size('100MB'))
+    print(convert_size('1TB'))
+
+
 if __name__ == '__main__':
     # test_downloader()#
+    test_convert_size()
     pass
