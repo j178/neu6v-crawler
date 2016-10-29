@@ -13,10 +13,11 @@ os.chdir(os.path.dirname(__file__))
 from crawler import BeautifulSoup
 from session import session as s
 from utorrent import uTorrent
+from util import load_config
 
 INDEX_PAGE = 'http://bt.neu6.edu.cn/plugin.php?id=neubt_resourceindex'
 DOWNLOADED_FILE = 'data/record.json'
-CONFIG_FILE = 'data/config-my.json'  # change this to data/config.json
+CONFIG_FILE = 'data/config.json'
 
 # getLogger 时传入的name, 是为了日志分级, 默认返回 root, 在 Formatter中使用 %(name)s 可以获取logger的名字
 # basicConfig是用来配置root logger的, 如果toot没有handler, 则生成一个, 如果已经有了则不做任何事
@@ -159,13 +160,8 @@ def main():
     save()
 
 
-def load_config():
-    with open(CONFIG_FILE) as f:
-        return json.load(f)
-
-
 if __name__ == '__main__':
-    utorrent = uTorrent(**load_config())
+    utorrent = uTorrent(**load_config(CONFIG_FILE))
     try:
         main()
     except Exception as e:

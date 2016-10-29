@@ -1,7 +1,6 @@
 .idea/
 .gitignore
-data/cookies-my.json
-data/config-my.json
-data/index.html
+data/cookies.mine.json
+data/config.mine.json
 *.log
 __pycache__/

@@ -14,7 +14,6 @@
 1. `git clone git@github.com:j178/neu6v-crawler.git`
 2. 登录六维账号, 打开浏览器开发者工具, 复制 `LRpW_2132_auth` 与 `LRpW_2132_saltkey` 这两项 cookie值 到`data/cookies.json`中
 3. 打开 uTorrent, 进入 `选项-设置-高级-网页界面`, 勾选 `启用网页界面`, 然后在`身份验证`中配置`用户名`和`密码`, 并将它们写入到`data/config.json`中
-4. 将 `session.py` 中 `COOKIE_FILE` 改为`data/cookies.json`, 同理将 `downloader.py` 中 `CONFIG_FILE` 改为 `data/config.json`
 
 ### 运行
 - 启动自动下载功能
