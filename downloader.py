@@ -51,8 +51,9 @@ def save():
 
 
 def convert_size(s):
-    """Convert the size unit to megabyte"""
-    r = re.search(r'(\d+)\w+(.)B', s)
+    """Convert the size string(12GB) to megabytes"""
+
+    r = re.search(r'(\d+)\s+(.)B', s)
     if r:
         size = r.group(1)
         unit = r.group(2)
@@ -71,6 +72,10 @@ def convert_size(s):
 
 def fetch_new(filter=None):
     """Refresh the resource index page and yield new url that has not been recorded"""
+
+    if filter is None:
+        filter = lambda heat, size, is_free: size < 50 * 1024 and is_free and heat <= 3  # return True to be kept
+
     log.info('Fetching new thread from resource index page')
     r = s.get(INDEX_PAGE)
     r.raise_for_status()
@@ -94,10 +99,7 @@ def fetch_new(filter=None):
 
         url = urljoin(INDEX_PAGE, href)
 
-        if filter is None:
-            filter = lambda h, s, f: s > 50 * 1024 or not f or h > 3  # return True to be filtered
-
-        if filter(heat, size, is_free):
+        if not filter(heat, size, is_free):
             record.add(url)
 
         elif url not in record:
