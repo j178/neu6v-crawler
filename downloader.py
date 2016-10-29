@@ -3,10 +3,9 @@ import logging
 import os
 import re
 import sys
+import time
 import traceback
 from urllib.parse import urljoin
-
-import time
 
 sys.path.insert(0, os.path.dirname(__file__))
 os.chdir(os.path.dirname(__file__))
@@ -41,10 +40,7 @@ def load():
     global record
     with open(DOWNLOADED_FILE) as f:
         log.info('Loading downloaded torrent files list from {}'.format(DOWNLOADED_FILE))
-        try:
-            l = json.load(f)
-        except json.JSONDecodeError:
-            return
+        l = json.load(f)
         record = set(l)
 
 
@@ -55,7 +51,8 @@ def save():
 
 
 def convert_size(s):
-    r = re.search(r'(\d+) (.)B', s)
+    """Convert the size unit to megabyte"""
+    r = re.search(r'(\d+)\w+(.)B', s)
     if r:
         size = r.group(1)
         unit = r.group(2)
@@ -72,7 +69,8 @@ def convert_size(s):
     raise ValueError('Invalid size: {!r}'.format(s))
 
 
-def get_new(filter=None):
+def fetch_new(filter=None):
+    """Refresh the resource index page and yield new url that has not been recorded"""
     log.info('Fetching new thread from resource index page')
     r = s.get(INDEX_PAGE)
     r.raise_for_status()
@@ -113,16 +111,18 @@ def get_filename_from_response(r):
 
 
 def download(url):
+    """Go to the thread page and follow the link to download the torrent"""
     # 进入资源页面
     log.info('Going to resource page {}'.format(url))
     r = s.get(url)
+
     soup = BeautifulSoup(r.text)
     a = soup.find('dl', class_='tattl').a
     # 获取种子下载链接
     href = a['href']
-    log.info('Found torrent url: {}'.format(href))
     if not href:
         return
+    log.info('Found torrent url: {}'.format(href))
 
     # 直接下载种子或者进入待下载页面
     r = s.get(urljoin(url, href))
@@ -150,7 +150,7 @@ def download(url):
 
 def main():
     load()
-    for url in get_new():
+    for url in fetch_new():
         filename, content = download(url)
         utorrent.add_file(bytes=content)
         time.sleep(5)

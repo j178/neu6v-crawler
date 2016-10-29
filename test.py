@@ -14,7 +14,17 @@ def test_convert_size():
     print(convert_size('1TB'))
 
 
+def fuck():
+    for x in range(10):
+        print(x)
+
+    print('haha {}'.format(x))
+    for x in range(10):
+        print(x)
+
+
 if __name__ == '__main__':
     # test_downloader()#
-    test_convert_size()
+    # test_convert_size()
+    fuck()
     pass
