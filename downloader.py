@@ -171,4 +171,3 @@ if __name__ == '__main__':
     except Exception as e:
         log.error(traceback.format_exc())
         raise
-        # test()
